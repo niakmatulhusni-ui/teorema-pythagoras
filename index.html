@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis Interaktif - Teorema Pythagoras | Kelas 8</title>
+<style>
+  :root{
+    --primary:#4f46e5; --primary-dark:#3730a3; --primary-light:#e0e7ff;
+    --success:#16a34a; --success-light:#dcfce7;
+    --error:#dc2626; --error-light:#fee2e2;
+    --warn:#d97706; --warn-light:#fef3c7;
+    --bg:#f1f5f9; --card:#ffffff; --text:#1e293b; --muted:#64748b;
+    --border:#e2e8f0; --radius:14px; --shadow:0 4px 20px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:linear-gradient(135deg,#e0e7ff 0%,#f1f5f9 50%,#fae8ff 100%);
+    min-height:100vh;color:var(--text);line-height:1.6;padding:16px;
+  }
+  .wrap{max-width:820px;margin:0 auto}
+  .screen{display:none;animation:fade .4s ease}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ===== Header ===== */
+  .app-header{text-align:center;padding:24px 16px 8px}
+  .app-header h1{font-size:1.7rem;color:var(--primary-dark);margin-bottom:6px}
+  .app-header .sub{color:var(--muted);font-size:.95rem}
+  .badge{display:inline-block;background:var(--primary-light);color:var(--primary-dark);
+    padding:4px 14px;border-radius:999px;font-size:.8rem;font-weight:600;margin-top:8px}
+
+  /* ===== Identity ===== */
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:28px;margin:16px 0}
+  .card h2{color:var(--primary-dark);margin-bottom:14px;font-size:1.25rem}
+  .form-group{margin-bottom:16px}
+  .form-group label{display:block;font-weight:600;margin-bottom:6px;font-size:.92rem}
+  .form-group input,.form-group select{
+    width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:10px;
+    font-size:1rem;transition:border-color .2s,box-shadow .2s;background:#fff}
+  .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary);
+    box-shadow:0 0 0 3px var(--primary-light)}
+  .btn{display:inline-block;background:var(--primary);color:#fff;border:none;
+    padding:13px 28px;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;
+    transition:all .2s;font-family:inherit}
+  .btn:hover:not(:disabled){background:var(--primary-dark);transform:translateY(-1px)}
+  .btn:disabled{background:#cbd5e1;cursor:not-allowed}
+  .btn-secondary{background:#fff;color:var(--primary);border:2px solid var(--primary)}
+  .btn-secondary:hover:not(:disabled){background:var(--primary-light)}
+  .btn-success{background:var(--success)}
+  .btn-success:hover:not(:disabled){background:#15803d}
+  .info-note{background:var(--primary-light);border-left:4px solid var(--primary);
+    padding:12px 16px;border-radius:8px;font-size:.9rem;margin:16px 0;color:var(--primary-dark)}
+  .rules{margin:14px 0;padding:0;list-style:none}
+  .rules li{padding:8px 0 8px 28px;position:relative;font-size:.93rem}
+  .rules li:before{content:"✓";position:absolute;left:0;color:var(--success);font-weight:700}
+
+  /* ===== Progress ===== */
+  .quiz-top{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:14px 20px;margin-bottom:14px;position:sticky;top:8px;z-index:10}
+  .quiz-top .row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  .student-tag{font-size:.85rem;color:var(--muted)}
+  .student-tag b{color:var(--primary-dark)}
+  .progress-track{height:10px;background:var(--border);border-radius:999px;margin-top:10px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),#8b5cf6);
+    border-radius:999px;transition:width .5s ease;width:0}
+  .section-pill{background:var(--primary-light);color:var(--primary-dark);padding:4px 12px;
+    border-radius:999px;font-size:.78rem;font-weight:700}
+
+  /* ===== Question ===== */
+  .qcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:24px;margin-bottom:14px}
+  .q-num{display:inline-flex;align-items:center;justify-content:center;
+    width:38px;height:38px;background:var(--primary);color:#fff;border-radius:50%;
+    font-weight:700;margin-right:10px;flex-shrink:0}
+  .q-head{display:flex;align-items:center;gap:4px;margin-bottom:6px}
+  .q-type-tag{font-size:.72rem;background:#f1f5f9;color:var(--muted);padding:3px 10px;
+    border-radius:999px;font-weight:600;margin-left:auto}
+  .q-text{font-size:1.05rem;margin:8px 0 14px;font-weight:500}
+  .q-text .hl{color:var(--primary-dark);font-weight:700}
+  .diagram{background:#fafbfc;border:1px solid var(--border);border-radius:10px;
+    padding:16px;margin:12px 0;text-align:center;overflow-x:auto}
+  .diagram svg{max-width:100%;height:auto}
+  .given{background:#f8fafc;border-left:4px solid #94a3b8;padding:10px 14px;border-radius:6px;
+    margin:10px 0;font-size:.9rem}
+  .given b{color:var(--text)}
+
+  /* ===== Answer inputs ===== */
+  .opt-list{display:grid;gap:10px;margin:12px 0}
+  .opt{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border:2px solid var(--border);
+    border-radius:10px;cursor:pointer;transition:all .15s;background:#fff;font-size:.97rem}
+  .opt:hover{border-color:var(--primary);background:var(--primary-light)}
+  .opt input{margin-top:3px;accent-color:var(--primary);transform:scale(1.2)}
+  .opt.selected{border-color:var(--primary);background:var(--primary-light);font-weight:600}
+  .opt.locked{cursor:default}
+  .opt.correct-sel{border-color:var(--success);background:var(--success-light)}
+  .opt.wrong-sel{border-color:var(--error);background:var(--error-light)}
+  .text-input{width:100%;padding:13px 16px;border:2px solid var(--border);border-radius:10px;
+    font-size:1.05rem;font-family:inherit;transition:border-color .2s}
+  .text-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+  .input-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+  .input-row .text-input{flex:1;min-width:160px}
+  .unit-label{font-weight:600;color:var(--muted)}
+  .checkbox-grid{display:grid;gap:10px;margin:12px 0}
+  .check-opt{display:flex;align-items:center;gap:12px;padding:12px 16px;border:2px solid var(--border);
+    border-radius:10px;cursor:pointer;transition:all .15s;background:#fff}
+  .check-opt:hover{border-color:var(--primary)}
+  .check-opt input{accent-color:var(--primary);transform:scale(1.3)}
+  .check-opt.checked{border-color:var(--primary);background:var(--primary-light)}
+  .yn-row{display:flex;gap:12px;margin:12px 0;flex-wrap:wrap}
+  .yn-btn{flex:1;min-width:140px;padding:14px;border:2px solid var(--border);border-radius:10px;
+    background:#fff;cursor:pointer;font-size:1rem;font-weight:600;transition:all .15s;text-align:center}
+  .yn-btn:hover{border-color:var(--primary)}
+  .yn-btn.sel-yes{border-color:var(--success);background:var(--success-light);color:var(--success)}
+  .yn-btn.sel-no{border-color:var(--error);background:var(--error-light);color:var(--error)}
+
+  /* ===== Feedback ===== */
+  .feedback{margin-top:14px;padding:14px 18px;border-radius:10px;font-size:.95rem;
+    animation:fade .3s ease;display:none}
+  .feedback.show{display:block}
+  .feedback .ftitle{font-weight:700;margin-bottom:4px;font-size:1rem}
+  .feedback.correct{background:var(--success-light);border-left:4px solid var(--success);color:#14532d}
+  .feedback.retry{background:var(--warn-light);border-left:4px solid var(--warn);color:#78350f}
+  .feedback.wrong{background:var(--error-light);border-left:4px solid var(--error);color:#7f1d1d}
+  .feedback .steps{margin-top:8px;padding-top:8px;border-top:1px dashed rgba(0,0,0,.1);font-size:.9rem}
+
+  .actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap}
+
+  /* ===== Section done ===== */
+  .section-done{text-align:center;padding:30px}
+  .section-done .big{font-size:3rem;margin-bottom:8px}
+  .section-done h2{color:var(--primary-dark);margin-bottom:8px}
+  .section-done p{color:var(--muted);margin-bottom:20px}
+  .mini-stats{display:flex;gap:16px;justify-content:center;margin:18px 0;flex-wrap:wrap}
+  .mini-stat{background:var(--primary-light);padding:12px 20px;border-radius:10px;text-align:center}
+  .mini-stat .num{font-size:1.5rem;font-weight:700;color:var(--primary-dark);display:block}
+  .mini-stat .lbl{font-size:.78rem;color:var(--muted)}
+
+  /* ===== Results ===== */
+  .result-hero{text-align:center;padding:30px 20px}
+  .result-hero .score-ring{width:160px;height:160px;margin:0 auto 16px;position:relative}
+  .result-hero .score-num{position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center}
+  .result-hero .score-num span:first-child{font-size:2.6rem;font-weight:800;color:var(--primary-dark)}
+  .result-hero .score-num small{color:var(--muted)}
+  .grade{font-size:1.4rem;font-weight:700;margin:8px 0}
+  .review-list{margin-top:16px}
+  .review-item{display:flex;gap:12px;padding:12px;border-radius:8px;background:#f8fafc;margin-bottom:8px;align-items:flex-start}
+  .review-item .ri-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-weight:700;color:#fff;flex-shrink:0;font-size:.85rem}
+  .ri-ok{background:var(--success)}.ri-no{background:var(--error)}
+  .review-item .ri-body{flex:1;font-size:.9rem}
+  .review-item .ri-q{font-weight:600;margin-bottom:2px}
+  .review-item .ri-a{color:var(--muted)}
+  .review-item .ri-a b{color:var(--text)}
+  .actions-center{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+
+  @media(max-width:560px){
+    .app-header h1{font-size:1.3rem}
+    .card{padding:20px}
+    .qcard{padding:18px}
+    .q-text{font-size:1rem}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ HEADER ============ -->
+  <div class="app-header">
+    <h1>📐 Kuis Interaktif Teorema Pythagoras</h1>
+    <div class="sub">Mata Pelajaran Matematika · Kelas 8 (SMP)</div>
+    <span class="badge">13 Soal · 4 Bagian · 5 Variasi Cara Menjawab</span>
+  </div>
+
+  <!-- ============ SCREEN: IDENTITAS ============ -->
+  <div id="screen-identity" class="screen active">
+    <div class="card">
+      <h2>🎓 Identitas Siswa</h2>
+      <p style="color:var(--muted);margin-bottom:18px;font-size:.92rem">
+        Sebelum memulai, silakan isi identitas Anda terlebih dahulu.</p>
+      <div class="form-group">
+        <label for="in-name">Nama Lengkap</label>
+        <input type="text" id="in-name" placeholder="Tulis nama lengkap Anda..." autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="in-class">Kelas</label>
+        <select id="in-class">
+          <option value="">-- Pilih Kelas --</option>
+          <option>VIII-A</option><option>VIII-B</option><option>VIII-C</option><option>VIII-D</option>
+          <option>VIII-E</option><option>VIII-F</option><option>VIII-G</option><option>VIII-H</option>
+          <option>VIII-1</option><option>VIII-2</option><option>VIII-3</option><option>VIII-4</option>
+          <option>VIII-5</option><option>VIII-6</option><option>VIII-7</option><option>VIII-8</option>
+          <option>VIII-9</option>
+        </select>
+      </div>
+      <div class="info-note">
+        <b>📋 Ketentuan Kuis:</b>
+        <ul class="rules">
+          <li>Setiap soal harus diselesaikan sebelum bisa lanjut ke soal berikutnya.</li>
+          <li>Jika jawaban salah, Anda diberi <b>1 kesempatan mengulang</b>.</li>
+          <li>Anda <b>tidak dapat lanjut ke bagian berikutnya</b> sebelum seluruh soal pada bagian ini selesai.</li>
+          <li>Setiap jawaban benar/salah akan mendapat <b>penguatan dan pembahasan</b>.</li>
+          <li>Tersedia beragam cara menjawab: pilihan ganda, isian singkat, pilih benar semua, Ya/Tidak + alasan, dan menempatkan titik pada bidang koordinat.</li>
+        </ul>
+      </div>
+      <div class="actions">
+        <button class="btn" id="btn-start" disabled>Mulai Kuis →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: KUIS ============ -->
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-top">
+      <div class="row">
+        <div class="student-tag">👤 <b id="stu-name">-</b> · <span id="stu-class">-</span></div>
+        <span class="section-pill" id="section-pill">Bagian 1</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-top:6px">
+        <span id="q-counter">Soal 1 dari 14</span>
+        <span id="score-counter">Benar: 0</span>
+      </div>
+    </div>
+    <div id="question-area"></div>
+  </div>
+
+  <!-- ============ SCREEN: HASIL ============ -->
+  <div id="screen-result" class="screen">
+    <div class="card" id="result-card"></div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   DATA KUIS
+   ============================================================ */
+const SECTIONS = [
+  {
+    title:"Bagian 1 · Mengenal Segitiga Siku-siku & Teorema Pythagoras",
+    desc:"Pahami ciri segitiga siku-siku dan gunakan teorema Pythagoras untuk menentukan sisi yang belum diketahui.",
+    questions:[
+      {
+        type:"checkbox",
+        prompt:"Berikut ini <b>segitiga manakah saja</b> yang merupakan segitiga siku-siku? <span class='hl'>(Pilih semua yang benar)</span>",
+        typeLabel:"Pilih semua yang benar",
+        options:[
+          {text:"Sisi-sisi: 4 cm, 5 cm, 6 cm", val:"456"},
+          {text:"Sisi-sisi: 5 cm, 12 cm, 13 cm", val:"51213"},
+          {text:"Sisi-sisi: 7 cm, 12 cm, 14 cm", val:"71214"},
+          {text:"Sisi-sisi: 9 cm, 12 cm, 15 cm", val:"91215"}
+        ],
+        answer:["51213","91215"],
+        explain:"Segitiga siku-siku memenuhi a² + b² = c² (c = sisi terpanjang/hipotenusa). "
+          +"• 5²+12² = 25+144 = 169 = 13² → siku-siku ✓  "
+          +"• 9²+12² = 81+144 = 225 = 15² → siku-siku ✓  "
+          +"• 4²+5² = 16+25 = 41 ≠ 36 = 6² → bukan  "
+          +"• 7²+12² = 49+144 = 193 ≠ 196 = 14² → bukan"
+      },
+      {
+        type:"numeric",
+        prompt:"Pada segitiga siku-siku berikut, tentukan panjang sisi <b>t</b>.",
+        typeLabel:"Isian singkat",
+        diagram:`<svg viewBox="0 0 340 240" width="320">
+          <polygon points="40,200 280,200 280,80" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/>
+          <path d="M 262,200 L 262,182 L 280,182" fill="none" stroke="#4f46e5" stroke-width="2"/>
+          <rect x="24" y="186" width="48" height="28" fill="#fff"/>
+          <text x="160" y="222" text-anchor="middle" font-size="17" font-weight="700" fill="#3730a3">t</text>
+          <rect x="285" y="120" width="26" height="24" fill="#fff"/>
+          <text x="300" y="142" text-anchor="middle" font-size="16" font-weight="700" fill="#3730a3">8 cm</text>
+          <text x="150" y="130" text-anchor="middle" font-size="16" font-weight="700" fill="#3730a3" transform="rotate(-30 150 130)">17 cm</text>
+        </svg>`,
+        given:"Hipotenusa = 17 cm, salah satu sisi siku-siku = 8 cm. Tanda siku terletak di antara sisi t dan sisi 8 cm.",
+        answer:15, unit:"cm", tol:0.05,
+        explain:"Karena t dan 8 cm adalah sisi siku-siku, dan 17 cm adalah hipotenusa: "
+          +"t² + 8² = 17² → t² = 289 − 64 = 225 → t = √225 = <b>15 cm</b>."
+      },
+      {
+        type:"numeric",
+        prompt:"Tentukan panjang sisi <b>p</b> pada segitiga siku-siku berikut.",
+        typeLabel:"Isian singkat",
+        diagram:`<svg viewBox="0 0 320 240" width="300">
+          <polygon points="40,200 240,200 40,70" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/>
+          <path d="M 40,182 L 58,182 L 58,200" fill="none" stroke="#4f46e5" stroke-width="2"/>
+          <text x="20" y="140" text-anchor="middle" font-size="16" font-weight="700" fill="#3730a3">p</text>
+          <text x="140" y="222" text-anchor="middle" font-size="16" font-weight="700" fill="#3730a3">9 m</text>
+          <text x="150" y="125" text-anchor="middle" font-size="16" font-weight="700" fill="#3730a3" transform="rotate(-35 150 125)">15 m</text>
+        </svg>`,
+        given:"Hipotenusa = 15 m, alas = 9 m. Tanda siku terletak di antara sisi p dan sisi 9 m.",
+        answer:12, unit:"m", tol:0.05,
+        explain:"p dan 9 m adalah sisi siku-siku, 15 m adalah hipotenusa: "
+          +"p² + 9² = 15² → p² = 225 − 81 = 144 → p = √144 = <b>12 m</b>."
+      },
+      {
+        type:"numeric",
+        prompt:"Segitiga ABC sama kaki dengan AB = AC = 10 cm dan BC = 12 cm. Tentukan panjang tinggi <b>h</b> dari puncak A.",
+        typeLabel:"Isian singkat",
+        diagram:`<svg viewBox="0 0 300 230" width="280">
+          <polygon points="150,30 60,200 240,200" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/>
+          <line x1="150" y1="30" x2="150" y2="200" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,4"/>
+          <path d="M 132,200 L 132,184 L 150,184" fill="none" stroke="#dc2626" stroke-width="2"/>
+          <text x="155" y="120" font-size="15" font-weight="700" fill="#dc2626">h</text>
+          <text x="95" y="120" font-size="15" font-weight="700" fill="#3730a3" transform="rotate(-49 95 120)">10 cm</text>
+          <text x="205" y="120" font-size="15" font-weight="700" fill="#3730a3" transform="rotate(49 205 120)">10 cm</text>
+          <text x="150" y="222" text-anchor="middle" font-size="15" font-weight="700" fill="#3730a3">12 cm</text>
+        </svg>`,
+        given:"AB = AC = 10 cm (sisi sama), BC = 12 cm (alas). Tinggi h membagi alas menjadi dua sama panjang.",
+        answer:8, unit:"cm", tol:0.05,
+        explain:"Tinggi segitiga sama kaki membagi alas menjadi dua bagian sama panjang = 12/2 = 6 cm, "
+          +"sehingga terbentuk segitiga siku-siku dengan sisi siku-siku h dan 6, serta hipotenusa 10. "
+          +"h² + 6² = 10² → h² = 100 − 36 = 64 → h = √64 = <b>8 cm</b>."
+      }
+    ]
+  },
+  {
+    title:"Bagian 2 · Teorema Pythagoras pada Bangun Gabungan",
+    desc:"Terapkan teorema Pythagoras pada bangun yang terdiri dari beberapa segitiga siku-siku.",
+    questions:[
+      {
+        type:"numeric",
+        prompt:"Segitiga besar pada gambar dibagi oleh garis tinggi menjadi dua segitiga siku-siku. Tentukan panjang sisi <b>d</b>.",
+        typeLabel:"Isian singkat",
+        diagram:`<svg viewBox="0 0 360 230" width="340">
+          <polygon points="40,200 160,200 300,200 175,40 175,200" fill="none"/>
+          <polygon points="40,200 175,200 175,40" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+          <polygon points="175,200 300,200 175,40" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+          <path d="M 175,184 L 191,184 L 191,200" fill="none" stroke="#3730a3" stroke-width="2"/>
+          <text x="100" y="222" text-anchor="middle" font-size="15" font-weight="700" fill="#d97706">6 m</text>
+          <text x="240" y="222" text-anchor="middle" font-size="15" font-weight="700" fill="#16a34a">15 m</text>
+          <text x="95" y="115" font-size="15" font-weight="700" fill="#d97706" transform="rotate(-55 95 115)">10 m</text>
+          <text x="250" y="125" font-size="16" font-weight="700" fill="#16a34a" transform="rotate(48 250 125)">d</text>
+        </svg>`,
+        given:"Sisi kiri = 10 m, alas kiri = 6 m, alas kanan = 15 m. Garis tinggi tegak lurus terhadap alas.",
+        answer:17, unit:"m", tol:0.05,
+        explain:"Langkah 1 — cari tinggi dari segitiga kiri: t² + 6² = 10² → t² = 100 − 36 = 64 → t = 8 m. "
+          +"Langkah 2 — pakai tinggi yang sama untuk segitiga kanan: d² = t² + 15² = 64 + 225 = 289 → d = √289 = <b>17 m</b>."
+      },
+      {
+        type:"numeric",
+        prompt:"Pada trapesium sama kaki berikut, tentukan panjang sisi miring <b>f</b>.",
+        typeLabel:"Isian singkat",
+        diagram:`<svg viewBox="0 0 320 240" width="300">
+          <polygon points="40,200 280,200 232,80 88,80" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/>
+          <line x1="88" y1="80" x2="88" y2="200" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,4"/>
+          <path d="M 88,200 L 88,184 L 104,184" fill="none" stroke="#dc2626" stroke-width="2"/>
+          <line x1="58" y1="138" x2="70" y2="142" stroke="#4f46e5" stroke-width="2.5"/>
+          <line x1="250" y1="138" x2="262" y2="142" stroke="#4f46e5" stroke-width="2.5"/>
+          <text x="160" y="68" text-anchor="middle" font-size="15" font-weight="700" fill="#3730a3">9 m</text>
+          <text x="160" y="222" text-anchor="middle" font-size="15" font-weight="700" fill="#3730a3">15 m</text>
+          <text x="96" y="146" font-size="15" font-weight="700" fill="#dc2626">4 m</text>
+          <text x="64" y="216" text-anchor="middle" font-size="12" font-weight="700" fill="#64748b">3 m</text>
+          <text x="256" y="216" text-anchor="middle" font-size="12" font-weight="700" fill="#64748b">3 m</text>
+          <text x="52" y="146" font-size="16" font-weight="700" fill="#dc2626">f</text>
+          <text x="270" y="146" font-size="16" font-weight="700" fill="#dc2626">f</text>
+        </svg>`,
+        given:"Trapesium sama kaki ABCD dengan sisi sejajar atas = 9 m dan sisi sejajar bawah = 15 m, serta tinggi = 4 m. Kedua sisi miring (kaki) sama panjang = f.",
+        answer:5, unit:"m", tol:0.05,
+        explain:"Pada trapesium sama kaki, tarik garis tinggi dari kedua titik sudut atas ke sisi bawah. Garis tinggi membagi sisi bawah menjadi 3 m + 9 m + 3 m = 15 m, sehingga setiap segmen di luar sisi atas = (15 − 9)/2 = 3 m. "
+          +"Terbentuk segitiga siku-siku dengan sisi siku-siku 4 m (tinggi) dan 3 m, serta sisi miring f. "
+          +"f² = 4² + 3² = 16 + 9 = 25 → f = √25 = <b>5 m</b>."
+      }
+    ]
+  },
+  {
+    title:"Bagian 3 · Guided Practice: Soal Cerita Sehari-hari",
+    desc:"Terapkan teorema Pythagoras pada permasalahan kontekstual kehidupan nyata.",
+    questions:[
+      {
+        type:"placepoint",
+        prompt:"<b>a.</b> Aldo dan Arjuna berdiri saling membelakangi lalu bermain tembak-tembakan pistol bambu. "
+          +"Aldo berjalan 20 langkah ke depan, kemudian 15 langkah ke kanan. Arjuna berjalan 16 langkah ke depan, kemudian 12 langkah ke kanan. "
+          +"Asumsikan keduanya mulai dari titik pusat (0,0), Aldo menghadap arah utara (+y), Arjuna menghadap arah selatan (−y). "
+          +"<br><b>Klik pada bidang kartesius</b> untuk menempatkan posisi akhir Aldo, lalu posisi akhir Arjuna.",
+        typeLabel:"Klik menempatkan titik",
+        given:"Aldo: 20 langkah ke depan, 15 langkah ke kanan. Arjuna: 16 langkah ke depan, 12 langkah ke kanan. Saling membelakangi dari titik (0,0).",
+        targets:[{label:"Aldo",x:15,y:20},{label:"Arjuna",x:-12,y:-16}],
+        tol:2.0,
+        explain:"Aldo menghadap +y: maju 20 → (0,20), lalu ke kanan (+x) 15 → (15,20). "
+          +"Arjuna menghadap −y: maju 16 → (0,−16), lalu ke kanan (baginya = −x) 12 → (−12,−16). "
+          +"Posisi benar: Aldo (15, 20) dan Arjuna (−12, −16)."
+      },
+      {
+        type:"numeric",
+        prompt:"<b>b.</b> Berdasarkan posisi akhir Aldo dan Arjuna pada soal sebelumnya, berapa <b>jarak</b> (dalam langkah) antara mereka berdua saat saling menembak?",
+        typeLabel:"Isian singkat (soal cerita)",
+        given:"Posisi Aldo = (15, 20), posisi Arjuna = (−12, −16).",
+        answer:45, unit:"langkah", tol:0.5,
+        explain:"Selisih absis = 15 − (−12) = 27. Selisih ordinat = 20 − (−16) = 36. "
+          +"Jarak = √(27² + 36²) = √(729 + 1296) = √2025 = <b>45 langkah</b>."
+      },
+      {
+        type:"yesno",
+        prompt:"Seorang atlet tenis mengajukan pertanyaan kepada wasit. Suara atlet hanya dapat didengar wasit pada jarak maksimum 30 kaki. Wasit duduk di kursi pada ketinggian 12 kaki, atlet berdiri setinggi 5 kaki, dan jarak mendatar antara keduanya 24 kaki. <b>Dapatkah wasit mendengar suara atlet?</b> Jelaskan jawabanmu (cantumkan perhitungan jaraknya).",
+        typeLabel:"Ya/Tidak + alasan",
+        given:"Tinggi wasit = 12 kaki, tinggi atlet = 5 kaki, jarak mendatar = 24 kaki, batas dengar = 30 kaki.",
+        answer:"ya", requireReason:"25",
+        explain:"Selisih tinggi = 12 − 5 = 7 kaki. Jarak langsung wasit–atlet (sisi miring) = √(24² + 7²) = √(576 + 49) = √625 = <b>25 kaki</b>. "
+          +"Karena 25 kaki ≤ 30 kaki (batas maksimal), maka <b>wasit DAPAT mendengar</b> suara atlet."
+      },
+      {
+        type:"numeric",
+        prompt:"Sebuah tangga bersandar pada tembok. Ujung tangga menyentuh tembok pada ketinggian tertentu, dan pangkal tangga berjarak 160 cm dari kaki tembok. Jika panjang tangga 200 cm, tentukan <b>tinggi tembok</b> yang dicapai ujung tangga (dalam meter).",
+        typeLabel:"Isian singkat (soal cerita)",
+        given:"Jarak pangkal tangga ke tembok = 160 cm, panjang tangga (sisi miring) = 200 cm.",
+        answer:1.2, unit:"m", tol:0.05,
+        explain:"t² + 160² = 200² → t² = 40000 − 25600 = 14400 → t = √14400 = 120 cm. "
+          +"Karena ditanya dalam meter: 120 cm = <b>1,2 m</b>."
+      }
+    ]
+  },
+  {
+    title:"Bagian 4 · Penilaian & Evaluasi",
+    desc:"Kerjakan soal pilihan ganda berikut dengan teliti untuk menguji pemahamanmu.",
+    questions:[
+      {
+        type:"mcq",
+        prompt:"Suatu segitiga siku-siku memiliki panjang hipotenusa 25 cm dan salah satu sisi siku-sikunya 7 cm. Panjang sisi siku-siku yang lain adalah ...",
+        typeLabel:"Pilihan ganda",
+        options:[
+          {text:"24 cm", val:"a"},{text:"23 cm", val:"b"},
+          {text:"26 cm", val:"c"},{text:"18 cm", val:"d"}
+        ],
+        answer:"a",
+        explain:"sisi² = 25² − 7² = 625 − 49 = 576 → sisi = √576 = <b>24 cm</b> (jawaban a)."
+      },
+      {
+        type:"mcq",
+        prompt:"Panjang sisi-sisi siku-siku pada suatu segitiga siku-siku adalah 4 cm dan 6 cm. Panjang hipotenusanya adalah ...",
+        typeLabel:"Pilihan ganda",
+        options:[
+          {text:"8,2 cm", val:"a"},{text:"7,2 cm", val:"b"},
+          {text:"9,2 cm", val:"c"},{text:"6,2 cm", val:"d"}
+        ],
+        answer:"b",
+        explain:"hipotenusa = √(4² + 6²) = √(16 + 36) = √52 ≈ <b>7,2 cm</b> (jawaban b)."
+      },
+      {
+        type:"mcq",
+        prompt:"Human, Arjuna, dan Aldo mencoba mengukur lebar sungai. Human dan Arjuna berdiri di tepi yang sama berjarak 5 m, sedangkan Aldo berada di seberang sungai tepat di depan Arjuna. Jarak Human ke Aldo (menyilang sungai) adalah 13 m. Lebar sungai tersebut adalah ...",
+        typeLabel:"Pilihan ganda",
+        options:[
+          {text:"10 m", val:"a"},{text:"11 m", val:"b"},
+          {text:"12 m", val:"c"},{text:"13 m", val:"d"}
+        ],
+        answer:"c",
+        explain:"Lebar² + 5² = 13² → Lebar² = 169 − 25 = 144 → Lebar = √144 = <b>12 m</b> (jawaban c)."
+      }
+    ]
+  }
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  student:{name:"",cls:""},
+  secIdx:0, qIdx:0,
+  totalQ:0,
+  answers:{},   // `${secIdx}_${qIdx}` -> {attempts, correct, value}
+  startTime:0
+};
+SECTIONS.forEach(s=>state.totalQ+=s.questions.length);
+
+/* ============================================================
+   PENGUATAN (reinforcement)
+   ============================================================ */
+const REINFORCE = {
+  correctFirst:["Hebat! Jawabanmu tepat sekali! 🌟","Mantap! Pemahamanmu sangat baik! 👏","Tepat sekali! Kamu menguasai konsepnya! ✨","Jawaban benar! Kerja yang sangat baik! 🎉","Luar biasa! Lanjutkan! 🚀"],
+  correctRetry:["Bagus! Kamu berhasil setelah mencoba lagi. 💪","Akhirnya benar! Pantang menyerah, ya! 👍","Tepat! Semakin sering berlatih semakin mahir! 🌟","Kerja bagus memperbaiki jawaban! Tetap semangat! 🔥"],
+  retry:["Belum tepat. Periksa kembali perhitunganmu — kamu masih punya 1 kesempatan. 💪","Hampir! Coba hitung ulang dengan teorema Pythagoras. 📐","Belum benar. Perhatikan sisi mana yang menjadi hipotenusa. Coba lagi! ✏️","Nyaris! Periksa lagi apakah sisi yang diketahui sudah benar. 💭"],
+  wrongFinal:["Jawaban yang benar adalah ","Kunci jawaban: "]
+};
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+
+/* ============================================================
+   IDENTITAS
+   ============================================================ */
+const inName=document.getElementById('in-name');
+const inClass=document.getElementById('in-class');
+const btnStart=document.getElementById('btn-start');
+function validateIdentity(){
+  const ok = inName.value.trim()!=="" && inClass.value!=="";
+  btnStart.disabled=!ok;
+}
+inName.addEventListener('input',validateIdentity);
+inClass.addEventListener('change',validateIdentity);
+btnStart.addEventListener('click',()=>{
+  state.student.name=inName.value.trim();
+  state.student.cls=inClass.value;
+  state.startTime=Date.now();
+  document.getElementById('stu-name').textContent=state.student.name;
+  document.getElementById('stu-class').textContent=state.student.cls;
+  showScreen('quiz');
+  renderQuestion();
+});
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============================================================
+   RENDER PERTANYAAN
+   ============================================================ */
+function currentQ(){ return SECTIONS[state.secIdx].questions[state.qIdx]; }
+function qKey(){ return state.secIdx+'_'+state.qIdx; }
+function globalQNumber(){
+  let n=1;
+  for(let s=0;s<state.secIdx;s++) n+=SECTIONS[s].questions.length;
+  return n+state.qIdx;
+}
+
+function updateProgress(){
+  const sec=SECTIONS[state.secIdx];
+  document.getElementById('section-pill').textContent='Bagian '+(state.secIdx+1)+' / '+SECTIONS.length;
+  let done=0,correct=0;
+  Object.values(state.answers).forEach(a=>{ if(a.correct){done++;correct++;} else if(a.completed) done++; });
+  // progress = answered (completed) questions
+  let completed=0;
+  Object.values(state.answers).forEach(a=>{ if(a.completed) completed++; });
+  const pct=Math.round(completed/state.totalQ*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('q-counter').textContent='Soal '+globalQNumber()+' dari '+state.totalQ;
+  document.getElementById('score-counter').textContent='Benar: '+correct;
+}
+
+function renderQuestion(){
+  const sec=SECTIONS[state.secIdx];
+  const q=currentQ();
+  const area=document.getElementById('question-area');
+  let html='<div class="qcard">';
+  html+='<div class="q-head"><span class="q-num">'+globalQNumber()+'</span><span class="q-type-tag">'+q.typeLabel+'</span></div>';
+  html+='<div class="q-text">'+q.prompt+'</div>';
+  if(q.given) html+='<div class="given">📋 <b>Diketahui:</b> '+q.given+'</div>';
+  if(q.diagram) html+='<div class="diagram">'+q.diagram+'</div>';
+  html+='<div id="answer-zone"></div>';
+  html+='<div class="feedback" id="feedback"></div>';
+  html+='<div class="actions" id="actions"></div>';
+  html+='</div>';
+  area.innerHTML=html;
+  updateProgress();
+  const az=document.getElementById('answer-zone');
+  if(q.type==='checkbox') renderCheckbox(q,az);
+  else if(q.type==='numeric') renderNumeric(q,az);
+  else if(q.type==='mcq') renderMCQ(q,az);
+  else if(q.type==='yesno') renderYesNo(q,az);
+  else if(q.type==='placepoint') renderPlacePoint(q,az);
+}
+
+/* ---- Checkbox (pilih semua yang benar) ---- */
+function renderCheckbox(q,az){
+  az.innerHTML='<div style="font-size:.85rem;color:var(--muted);margin-bottom:8px">Centang semua pilihan yang menurutmu benar:</div>';
+  const grid=document.createElement('div');grid.className='checkbox-grid';
+  q.options.forEach(opt=>{
+    const lbl=document.createElement('label');lbl.className='check-opt';
+    lbl.innerHTML='<input type="checkbox" value="'+opt.val+'"><span>'+opt.text+'</span>';
+    const cb=lbl.querySelector('input');
+    cb.addEventListener('change',()=>{
+      lbl.classList.toggle('checked',cb.checked);
+      document.getElementById('feedback').classList.remove('show');
+      resetActions();
+    });
+    grid.appendChild(lbl);
+  });
+  az.appendChild(grid);
+  const btn=document.createElement('button');btn.className='btn';btn.textContent='Periksa Jawaban';
+  btn.addEventListener('click',()=>{
+    const sel=[...grid.querySelectorAll('input:checked')].map(c=>c.value);
+    const correct=q.answer.slice().sort().join(',');
+    const user=sel.slice().sort().join(',');
+    handleCheck(q,user===correct,null);
+  });
+  document.getElementById('actions').appendChild(btn);
+}
+
+/* ---- Numeric ---- */
+function renderNumeric(q,az){
+  az.innerHTML='<div class="input-row"><input type="text" class="text-input" id="num-input" placeholder="Tulis jawaban..." inputmode="decimal" autocomplete="off"><span class="unit-label" id="num-unit">'+(q.unit||'')+'</span></div>';
+  const inp=document.getElementById('num-input');
+  inp.addEventListener('input',()=>{document.getElementById('feedback').classList.remove('show');resetActions();});
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')tryNumeric(q,inp);});
+  const btn=document.createElement('button');btn.className='btn';btn.textContent='Periksa Jawaban';
+  btn.addEventListener('click',()=>tryNumeric(q,inp));
+  document.getElementById('actions').appendChild(btn);
+  setTimeout(()=>inp.focus(),50);
+}
+function tryNumeric(q,inp){
+  const raw=inp.value.trim();
+  if(raw===''){flashEmpty();return;}
+  let v=raw.replace(/[a-zA-Z\s]/g,'').replace(',','.');
+  let num;
+  if(v.includes('/')){const[a,b]=v.split('/').map(Number);num=b?a/b:NaN;}
+  else num=parseFloat(v);
+  if(isNaN(num)){handleCheck(q,false,'Masukkan angka yang valid.');return;}
+  const ok=Math.abs(num-q.answer)<=q.tol;
+  handleCheck(q,ok,null,num);
+}
+
+/* ---- MCQ ---- */
+function renderMCQ(q,az){
+  az.innerHTML='<div class="opt-list" id="mcq-list"></div>';
+  const list=document.getElementById('mcq-list');
+  q.options.forEach(opt=>{
+    const lbl=document.createElement('label');lbl.className='opt';
+    lbl.innerHTML='<input type="radio" name="mcq" value="'+opt.val+'"><span>'+opt.text+'</span>';
+    const r=lbl.querySelector('input');
+    r.addEventListener('change',()=>{
+      list.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+      lbl.classList.add('selected');
+      document.getElementById('feedback').classList.remove('show');
+      resetActions();
+    });
+    list.appendChild(lbl);
+  });
+  const btn=document.createElement('button');btn.className='btn';btn.textContent='Periksa Jawaban';
+  btn.addEventListener('click',()=>{
+    const sel=list.querySelector('input:checked');
+    if(!sel){flashEmpty();return;}
+    handleCheck(q,sel.value===q.answer,null,sel.value);
+  });
+  document.getElementById('actions').appendChild(btn);
+}
+
+/* ---- Yes/No + reason ---- */
+function renderYesNo(q,az){
+  az.innerHTML='<div class="yn-row"><button class="yn-btn" data-v="ya">✅ Ya, dapat</button><button class="yn-btn" data-v="tidak">❌ Tidak, tidak dapat</button></div>'
+    +'<div style="font-size:.85rem;color:var(--muted);margin:10px 0 6px">Tuliskan alasan dan perhitunganmu:</div>'
+    +'<textarea class="text-input" id="yn-reason" rows="3" placeholder="Contoh: Jarak wasit-atlet = ... kaki, sehingga ..."></textarea>';
+  let chosen=null;
+  const btns=az.querySelectorAll('.yn-btn');
+  btns.forEach(b=>b.addEventListener('click',()=>{
+    chosen=b.dataset.v;
+    btns.forEach(x=>{x.classList.remove('sel-yes','sel-no');});
+    b.classList.add(chosen==='ya'?'sel-yes':'sel-no');
+    document.getElementById('feedback').classList.remove('show');
+    resetActions();
+  }));
+  const btn=document.createElement('button');btn.className='btn';btn.textContent='Periksa Jawaban';
+  btn.addEventListener('click',()=>{
+    if(!chosen){flashEmpty('Pilih Ya atau Tidak terlebih dahulu.');return;}
+    const reason=document.getElementById('yn-reason').value.trim();
+    const ok=(chosen===q.answer) && reason.toLowerCase().includes(q.requireReason);
+    if(chosen===q.answer && !ok && reason!==''){
+      handleCheck(q,false,'Pilihanmu benar, namun <b>alasan/perhitunganmu kurang tepat</b>. Pastikan kamu mencantumkan perhitungan jarak wasit-atlet dengan Pythagoras. Coba lengkapi lagi! 📐');
+      return;
+    }
+    if(reason===''){flashEmpty('Tulis alasan/perhitunganmu.');return;}
+    handleCheck(q,ok,null,chosen);
+  });
+  document.getElementById('actions').appendChild(btn);
+}
+
+/* ---- Place point on Cartesian plane ---- */
+function renderPlacePoint(q,az){
+  az.innerHTML='<div style="font-size:.85rem;color:var(--muted);margin-bottom:8px">Skala: 1 kotak = 1 satuan. Klik pada bidang untuk menempatkan titik.</div>'
+    +'<div id="pp-status" style="margin-bottom:8px;font-size:.9rem"></div>';
+  const wrap=document.createElement('div');
+  wrap.style.textAlign='center';
+  const SIZE=460, RANGE=20, STEP=SIZE/(RANGE*2);
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('viewBox','0 0 '+SIZE+' '+SIZE);
+  svg.setAttribute('width',Math.min(SIZE,460));
+  svg.style.maxWidth='100%';
+  svg.style.background='#fafbfc';
+  svg.style.border='1px solid #e2e8f0';
+  svg.style.borderRadius='10px';
+  // grid lines
+  for(let i=-RANGE;i<=RANGE;i++){
+    const p=i===0;
+    const x=SIZE/2+i*STEP;
+    const ln=document.createElementNS(ns,'line');
+    ln.setAttribute('x1',x);ln.setAttribute('y1',0);ln.setAttribute('x2',x);ln.setAttribute('y2',SIZE);
+    ln.setAttribute('stroke',p?'#94a3b8':'#e2e8f0');ln.setAttribute('stroke-width',p?'1.5':'1');
+    svg.appendChild(ln);
+    const ln2=document.createElementNS(ns,'line');
+    ln2.setAttribute('x1',0);ln2.setAttribute('y1',x);ln2.setAttribute('x2',SIZE);ln2.setAttribute('y2',x);
+    ln2.setAttribute('stroke',p?'#94a3b8':'#e2e8f0');ln2.setAttribute('stroke-width',p?'1.5':'1');
+    svg.appendChild(ln2);
+    if(i!==0 && i%5===0){
+      const tx=document.createElementNS(ns,'text');
+      tx.setAttribute('x',x+3);tx.setAttribute('y',SIZE/2-4);tx.setAttribute('font-size','10');tx.setAttribute('fill','#94a3b8');
+      tx.textContent=i;svg.appendChild(tx);
+      const ty=document.createElementNS(ns,'text');
+      ty.setAttribute('x',SIZE/2+5);ty.setAttribute('y',x+11);ty.setAttribute('font-size','10');ty.setAttribute('fill','#94a3b8');
+      ty.textContent=i;svg.appendChild(ty);
+    }
+  }
+  // axis labels
+  const xlab=document.createElementNS(ns,'text');
+  xlab.setAttribute('x',SIZE-12);xlab.setAttribute('y',SIZE/2-6);xlab.setAttribute('font-size','12');xlab.setAttribute('font-weight','700');xlab.setAttribute('fill','#475569');
+  xlab.textContent='x';svg.appendChild(xlab);
+  const ylab=document.createElementNS(ns,'text');
+  ylab.setAttribute('x',SIZE/2+8);ylab.setAttribute('y',12);ylab.setAttribute('font-size','12');ylab.setAttribute('font-weight','700');ylab.setAttribute('fill','#475569');
+  ylab.textContent='y';svg.appendChild(ylab);
+
+  const placed=[];
+  const colors=['#dc2626','#2563eb'];
+  const status=document.getElementById('pp-status');
+  function updateStatus(){
+    if(placed.length===0){
+      status.innerHTML='<b style="color:#dc2626">🔴 Klik untuk menempatkan posisi akhir <u>Aldo</u></b>';
+    } else if(placed.length===1){
+      status.innerHTML='Aldo: ('+placed[0].x+', '+placed[0].y+') &nbsp;—&nbsp; <b style="color:#2563eb">🔵 Sekarang klik untuk menempatkan posisi akhir <u>Arjuna</u></b>';
+    } else {
+      status.innerHTML='Aldo: ('+placed[0].x+', '+placed[0].y+') &nbsp; | &nbsp; Arjuna: ('+placed[1].x+', '+placed[1].y+')';
+    }
+  }
+  updateStatus();
+
+  svg.addEventListener('click',e=>{
+    if(placed.length>=2){
+      // reset on third click
+      placed.length=0;
+      svg.querySelectorAll('.marker').forEach(m=>m.remove());
+      updateStatus();
+      document.getElementById('feedback').classList.remove('show');
+      resetActions();
+      return;
+    }
+    const rect=svg.getBoundingClientRect();
+    const vb=svg.viewBox.baseVal;
+    const px=(e.clientX-rect.left)/rect.width*vb.width;
+    const py=(e.clientY-rect.top)/rect.height*vb.height;
+    const gx=Math.round((px-SIZE/2)/STEP);
+    const gy=Math.round((SIZE/2-py)/STEP);
+    const m=document.createElementNS(ns,'circle');
+    m.setAttribute('cx',SIZE/2+gx*STEP);m.setAttribute('cy',SIZE/2-gy*STEP);
+    m.setAttribute('r','8');m.setAttribute('fill',colors[placed.length]);
+    m.setAttribute('class','marker');m.setAttribute('stroke','#fff');m.setAttribute('stroke-width','2');
+    svg.appendChild(m);
+    const t=document.createElementNS(ns,'text');
+    t.setAttribute('x',SIZE/2+gx*STEP+10);t.setAttribute('y',SIZE/2-gy*STEP-6);
+    t.setAttribute('font-size','12');t.setAttribute('font-weight','700');t.setAttribute('fill',colors[placed.length]);
+    t.textContent=q.targets[placed.length].label;
+    t.setAttribute('class','marker');
+    svg.appendChild(t);
+    placed.push({x:gx,y:gy});
+    updateStatus();
+    document.getElementById('feedback').classList.remove('show');
+    resetActions();
+  });
+  wrap.appendChild(svg);
+  // legend
+  const legend=document.createElement('div');
+  legend.style.cssText='margin-top:8px;font-size:.82rem;color:var(--muted)';
+  legend.innerHTML='🔴 Aldo &nbsp; 🔵 Arjuna &nbsp; · &nbsp; Klik lagi untuk mengulang penempatan';
+  wrap.appendChild(legend);
+  az.appendChild(wrap);
+
+  const btn=document.createElement('button');btn.className='btn';btn.textContent='Periksa Jawaban';
+  btn.addEventListener('click',()=>{
+    if(placed.length<2){flashEmpty('Klik pada bidang untuk menempatkan kedua titik.');return;}
+    const ok=q.targets.every((t,i)=>{
+      const d=Math.sqrt((t.x-placed[i].x)**2+(t.y-placed[i].y)**2);
+      return d<=q.tol;
+    });
+    handleCheck(q,ok,null,placed.map((p,i)=>q.targets[i].label+':('+p.x+','+p.y+')').join(' '));
+  });
+  document.getElementById('actions').appendChild(btn);
+}
+
+/* ============================================================
+   PENGECEKAN & FEEDBACK
+   ============================================================ */
+function flashEmpty(msg){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback retry show';
+  fb.innerHTML='<div class="ftitle">⚠️ Belum lengkap</div>'+(msg||'Silakan jawab terlebih dahulu sebelum memeriksa.');
+}
+function resetActions(){
+  // re-enable check button (in case it was hidden after final answer)
+  const act=document.getElementById('actions');
+  // keep current content; nothing to do unless we changed it
+}
+function lockInputs(){
+  document.querySelectorAll('#answer-zone input, #answer-zone textarea, #answer-zone button, .opt, .check-opt, .yn-btn')
+    .forEach(el=>{el.style.pointerEvents='none';el.style.opacity='.7';});
+}
+
+function handleCheck(q,correct,customMsg,rawValue){
+  const key=qKey();
+  const rec=state.answers[key]||{attempts:0,correct:false,completed:false,value:null};
+  rec.attempts++;
+  rec.value=rawValue!==undefined?rawValue:rec.value;
+  const fb=document.getElementById('feedback');
+  const act=document.getElementById('actions');
+  act.innerHTML='';
+
+  if(correct){
+    rec.correct=true; rec.completed=true;
+    state.answers[key]=rec;
+    fb.className='feedback correct show';
+    const praise = rec.attempts===1?pick(REINFORCE.correctFirst):pick(REINFORCE.correctRetry);
+    fb.innerHTML='<div class="ftitle">✅ '+praise+'</div>'
+      +'<div class="steps">📖 <b>Pembahasan:</b> '+q.explain+'</div>';
+    lockInputs();
+    const nb=document.createElement('button');
+    const isLast = state.secIdx===SECTIONS.length-1 && state.qIdx===SECTIONS[state.secIdx].questions.length-1;
+    nb.className='btn btn-success';
+    nb.textContent = isLast? 'Lihat Hasil Akhir →' : 'Soal Berikutnya →';
+    nb.addEventListener('click',advance);
+    act.appendChild(nb);
+    updateProgress();
+  } else {
+    if(rec.attempts>=2){
+      // final wrong
+      rec.correct=false; rec.completed=true;
+      state.answers[key]=rec;
+      fb.className='feedback wrong show';
+      let correctVal=q.answer;
+      if(q.type==='mcq'){const o=q.options.find(o=>o.val===q.answer);correctVal=o?o.text:q.answer;}
+      else if(q.type==='numeric') correctVal=q.answer+(q.unit?' '+q.unit:'');
+      else if(q.type==='yesno') correctVal=(q.answer==='ya'?'Ya, wasit dapat mendengar':'Tidak');
+      else if(q.type==='checkbox'){correctVal=q.options.filter(o=>q.answer.includes(o.val)).map(o=>o.text).join('; ');}
+      else if(q.type==='placepoint') correctVal=q.targets.map(t=>t.label+' ('+t.x+', '+t.y+')').join('  &  ');
+      fb.innerHTML='<div class="ftitle">❌ '+pick(REINFORCE.wrongFinal)+'<b>'+ (typeof correctVal==='string'?correctVal:correctVal) +'</b></div>'
+        +(customMsg?'<div>'+customMsg+'</div>':'')
+        +'<div class="steps">📖 <b>Pembahasan:</b> '+q.explain+'</div>';
+      lockInputs();
+      const nb=document.createElement('button');
+      const isLast = state.secIdx===SECTIONS.length-1 && state.qIdx===SECTIONS[state.secIdx].questions.length-1;
+      nb.className='btn';
+      nb.textContent = isLast? 'Lihat Hasil Akhir →' : 'Lanjut ke Soal Berikutnya →';
+      nb.addEventListener('click',advance);
+      act.appendChild(nb);
+      updateProgress();
+    } else {
+      // first wrong -> retry
+      state.answers[key]=rec;
+      fb.className='feedback retry show';
+      fb.innerHTML='<div class="ftitle">🤔 '+pick(REINFORCE.retry)+'</div>'
+        +(customMsg?'<div>'+customMsg+'</div>':'')
+        +'<div style="margin-top:6px;font-size:.85rem">Sisa kesempatan: <b>1</b></div>';
+      const rb=document.createElement('button');rb.className='btn';rb.textContent='Coba Lagi';
+      rb.addEventListener('click',()=>{
+        fb.classList.remove('show');
+        // reset selection visuals for retry
+        if(q.type==='mcq'){
+          document.querySelectorAll('#answer-zone input').forEach(i=>i.checked=false);
+          document.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+        } else if(q.type==='checkbox'){
+          document.querySelectorAll('#answer-zone input').forEach(i=>i.checked=false);
+          document.querySelectorAll('.check-opt').forEach(o=>o.classList.remove('checked'));
+        } else if(q.type==='yesno'){
+          document.querySelectorAll('.yn-btn').forEach(b=>b.classList.remove('sel-yes','sel-no'));
+          document.getElementById('yn-reason').value='';
+        } else if(q.type==='numeric'){
+          const inp=document.getElementById('num-input');inp.value='';inp.focus();
+        }
+        act.innerHTML='';
+        const cb=document.createElement('button');cb.className='btn';cb.textContent='Periksa Jawaban';
+        // re-wire check based on type
+        cb.addEventListener('click',()=>{
+          if(q.type==='numeric'){const inp=document.getElementById('num-input');tryNumeric(q,inp);}
+          else if(q.type==='mcq'){
+            const sel=document.querySelector('#mcq-list input:checked');
+            if(!sel){flashEmpty();return;}
+            handleCheck(q,sel.value===q.answer,null,sel.value);
+          } else if(q.type==='checkbox'){
+            const sel=[...document.querySelectorAll('#answer-zone input:checked')].map(c=>c.value);
+            const ok=sel.slice().sort().join(',')===q.answer.slice().sort().join(',');
+            handleCheck(q,ok,null);
+          } else if(q.type==='yesno'){
+            const chosen=document.querySelector('.yn-btn.sel-yes, .yn-btn.sel-no');
+            if(!chosen){flashEmpty('Pilih Ya atau Tidak.');return;}
+            const v=chosen.dataset.v;
+            const reason=document.getElementById('yn-reason').value.trim();
+            if(reason===''){flashEmpty('Tulis alasan/perhitunganmu.');return;}
+            const ok=(v===q.answer)&&reason.toLowerCase().includes(q.requireReason);
+            handleCheck(q,ok,null,v);
+          }
+        });
+        act.appendChild(cb);
+      });
+      act.appendChild(rb);
+    }
+  }
+}
+
+/* ============================================================
+   NAVIGASI
+   ============================================================ */
+function advance(){
+  const sec=SECTIONS[state.secIdx];
+  if(state.qIdx < sec.questions.length-1){
+    state.qIdx++;
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else if(state.secIdx === SECTIONS.length-1){
+    // soal terakhir dari bagian terakhir -> langsung tampilkan hasil akhir
+    showResults();
+  } else {
+    // section complete
+    showSectionDone();
+  }
+}
+
+function showSectionDone(){
+  const sec=SECTIONS[state.secIdx];
+  const isLast=state.secIdx===SECTIONS.length-1;
+  // count correct in this section
+  let correct=0;
+  sec.questions.forEach((_,i)=>{const r=state.answers[state.secIdx+'_'+i];if(r&&r.correct)correct++;});
+  const total=sec.questions.length;
+  const area=document.getElementById('question-area');
+  area.innerHTML='<div class="qcard section-done">'
+    +'<div class="big">🎉</div>'
+    +'<h2>Bagian '+(state.secIdx+1)+' Selesai!</h2>'
+    +'<p>'+sec.title.replace(/^Bagian \d+ · /,'')+'</p>'
+    +'<div class="mini-stats">'
+    +'<div class="mini-stat"><span class="num">'+correct+'/'+total+'</span><span class="lbl">Benar di bagian ini</span></div>'
+    +'<div class="mini-stat"><span class="num">'+(state.secIdx+1)+'/'+SECTIONS.length+'</span><span class="lbl">Bagian selesai</span></div>'
+    +'</div>'
+    +'<div class="actions-center">'
+    +(isLast
+      ?'<button class="btn btn-success" id="btn-finish">Lihat Hasil Akhir 🏆</button>'
+      :'<button class="btn btn-success" id="btn-next-sec">Lanjut ke Bagian '+(state.secIdx+2)+' →</button>')
+    +'</div></div>';
+  updateProgress();
+  if(isLast){
+    document.getElementById('btn-finish').addEventListener('click',showResults);
+  } else {
+    document.getElementById('btn-next-sec').addEventListener('click',()=>{
+      state.secIdx++; state.qIdx=0;
+      // intro card for new section
+      renderSectionIntro();
+    });
+  }
+}
+
+function renderSectionIntro(){
+  const sec=SECTIONS[state.secIdx];
+  const area=document.getElementById('question-area');
+  area.innerHTML='<div class="qcard section-done">'
+    +'<div class="big">📚</div>'
+    +'<h2>'+sec.title+'</h2>'
+    +'<p>'+sec.desc+'</p>'
+    +'<div class="mini-stats"><div class="mini-stat"><span class="num">'+sec.questions.length+'</span><span class="lbl">Soal pada bagian ini</span></div></div>'
+    +'<div class="actions-center"><button class="btn" id="btn-start-sec">Mulai Bagian '+(state.secIdx+1)+' →</button></div>'
+    +'</div>';
+  updateProgress();
+  document.getElementById('btn-start-sec').addEventListener('click',renderQuestion);
+}
+
+/* ============================================================
+   HASIL AKHIR
+   ============================================================ */
+function showResults(){
+  const elapsed=Math.round((Date.now()-state.startTime)/1000);
+  const mm=String(Math.floor(elapsed/60)).padStart(2,'0');
+  const ss=String(elapsed%60).padStart(2,'0');
+  let correct=0;
+  SECTIONS.forEach((s,si)=>s.questions.forEach((q,qi)=>{
+    const r=state.answers[si+'_'+qi]; if(r&&r.correct)correct++;
+  }));
+  const pct=Math.round(correct/state.totalQ*100);
+  let grade, color, msg;
+  if(pct>=90){grade='A';color='#16a34a';msg='Luar biasa! Kamu menguasai teorema Pythagoras dengan sangat baik! 🏆';}
+  else if(pct>=75){grade='B';color='#2563eb';msg='Kerja yang baik! Pemahamanmu sudah mantap, terus berlatih! 👏';}
+  else if(pct>=60){grade='C';color='#d97706';msg='Cukup baik. Beberapa konsep perlu diperdalam lagi. Tetap semangat! 💪';}
+  else{grade='D';color='#dc2626';msg='Perlu banyak berlatih lagi. Pelajari kembali pembahasan setiap soal, ya! 📚';}
+
+  const r=52, circ=2*Math.PI*r;
+  const dash=circ*pct/100;
+  let reviewHtml='';
+  let n=0;
+  SECTIONS.forEach((s,si)=>s.questions.forEach((q,qi)=>{
+    n++;
+    const rec=state.answers[si+'_'+qi];
+    const ok=rec&&rec.correct;
+    let qShort=q.prompt.replace(/<[^>]+>/g,'').slice(0,70)+'...';
+    let correctVal=q.answer;
+    if(q.type==='mcq'){const o=q.options.find(o=>o.val===q.answer);correctVal=o?o.text:q.answer;}
+    else if(q.type==='numeric')correctVal=q.answer+(q.unit?' '+q.unit:'');
+    else if(q.type==='checkbox')correctVal=q.options.filter(o=>q.answer.includes(o.val)).map(o=>o.text).join('; ');
+    else if(q.type==='yesno')correctVal='Ya, wasit dapat mendengar (jarak 25 kaki ≤ 30 kaki)';
+    else if(q.type==='placepoint')correctVal=q.targets.map(t=>t.label+' ('+t.x+','+t.y+')').join('; ');
+    reviewHtml+='<div class="review-item">'
+      +'<div class="ri-icon '+(ok?'ri-ok':'ri-no')+'">'+(ok?'✓':'✗')+'</div>'
+      +'<div class="ri-body"><div class="ri-q">Soal '+n+'. '+qShort+'</div>'
+      +'<div class="ri-a">Kunci: <b>'+correctVal+'</b></div></div></div>';
+  }));
+
+  document.getElementById('result-card').innerHTML=
+    '<div class="result-hero">'
+    +'<svg class="score-ring" viewBox="0 0 120 120">'
+    +'<circle cx="60" cy="60" r="52" fill="none" stroke="#e2e8f0" stroke-width="10"/>'
+    +'<circle cx="60" cy="60" r="52" fill="none" stroke="'+color+'" stroke-width="10" '
+    +'stroke-linecap="round" stroke-dasharray="'+dash+' '+circ+'" transform="rotate(-90 60 60)"/>'
+    +'</svg>'
+    +'<div class="score-num"><span>'+pct+'%</span><small>'+correct+' dari '+state.totalQ+' benar</small></div>'
+    +'<div class="grade" style="color:'+color+'">Predikat: '+grade+'</div>'
+    +'<p style="color:var(--muted);max-width:420px;margin:0 auto">'+msg+'</p>'
+    +'<p style="font-size:.85rem;color:var(--muted);margin-top:8px">⏱ Waktu pengerjaan: '+mm+':'+ss+'</p>'
+    +'<p style="font-size:.9rem;margin-top:8px">👤 <b>'+state.student.name+'</b> · '+state.student.cls+'</p>'
+    +'</div>'
+    +'<h2 style="text-align:center;color:var(--primary-dark);margin:10px 0">📋 Review Jawaban</h2>'
+    +'<div class="review-list">'+reviewHtml+'</div>'
+    +'<div class="actions-center">'
+    +'<button class="btn btn-secondary" onclick="location.reload()">🔄 Ulangi Kuis</button>'
+    +'<button class="btn" onclick="window.print()">🖨 Cetak Hasil</button>'
+    +'</div>';
+  showScreen('result');
+}
+
+</script>
+</body>
+</html>
